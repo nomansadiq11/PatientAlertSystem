@@ -14,6 +14,8 @@ namespace PAT
     public partial class AddPatientInfo : Form
     {
         public static string connectionString = @"Data Source=.\PAT.db; Version=3; FailIfMissing=True; Foreign Keys=True;";
+        private int PatientID = 0;
+
         public AddPatientInfo()
         {
             InitializeComponent();
@@ -30,6 +32,7 @@ namespace PAT
 
             List<Patient> patients = GetPatientsLists(PatientID);
 
+            txt_patientid.Text = patients[0].ID.ToString();
             txt_MRN.Text = patients[0].MRN;
             txt_name.Text = patients[0].Name;
             txt_mobile.Text = patients[0].Mobile;
@@ -39,6 +42,7 @@ namespace PAT
             txt_Medicine.Text = patients[0].Medicine;
             txt_splcomments.Text = patients[0].SplComments;
 
+            
 
 
         }
@@ -63,6 +67,7 @@ namespace PAT
                             while (reader.Read())
                             {
                                 Patient la = new Patient();
+                                la.ID = Int32.Parse(reader["ID"].ToString());
                                 la.MRN = reader["MRN"].ToString();
                                 la.Name = reader["Name"].ToString();
                                 la.Mobile = reader["Mobile"].ToString();
@@ -87,17 +92,26 @@ namespace PAT
             return langs;
         }
 
-        public static int AddPatient(string MRN, string Name, string Mobile, int NDR, int NDRB, string Address, string Medicine, string SplComments, out string vError)
+        public static int AddPatient(int vPatientID, string MRN, string Name, string Mobile, int NDR, int NDRB, string Address, string Medicine, string SplComments, out string vError)
         {
             int result = -1;
             vError = "";
+            string sql = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'))";
+
+            if (vPatientID > 0)
+            {
+                sql = "update Patients set MRN = @MRN, Name = @Name, Mobile = @Mobile, NDR = @NDR, NDRB  = @NDRB,Address = @Address, Medicine  = @Medicine , SplComments =  @SplComments, reminderDate = Date('now', '+" + NDR + " day') where ID = " + vPatientID;
+            }
+
+
+
             using (SQLiteConnection conn = new SQLiteConnection(connectionString))
             {
 
                 conn.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(conn))
                 {
-                    cmd.CommandText = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'))";
+                    cmd.CommandText = sql;
                     cmd.Prepare();
 
                     cmd.Parameters.AddWithValue("@MRN", MRN);
@@ -127,7 +141,8 @@ namespace PAT
         private void btn_Save_Click(object sender, EventArgs e)
         {
             string verror = "";
-            int val = AddPatient(txt_MRN.Text.Trim(), txt_name.Text.Trim(), txt_mobile.Text.Trim(), Convert.ToInt32(txt_NRD.Text.Trim()), Convert.ToInt32(txt_NRDB.Text.Trim()), txt_Address.Text.Trim(), txt_Medicine.Text.Trim(), txt_splcomments.Text.Trim(), out verror);
+            PatientID = Convert.ToInt32(txt_patientid.Text); 
+            int val = AddPatient(PatientID, txt_MRN.Text.Trim(), txt_name.Text.Trim(), txt_mobile.Text.Trim(), Convert.ToInt32(txt_NRD.Text.Trim()), Convert.ToInt32(txt_NRDB.Text.Trim()), txt_Address.Text.Trim(), txt_Medicine.Text.Trim(), txt_splcomments.Text.Trim(), out verror);
             if (val == 1)
             {
                 Clears();

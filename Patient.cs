@@ -7,6 +7,7 @@ namespace PAT
 {
     public class Patient
     {
+        public int ID { get; set; }
         public string MRN { get; set; }
         public string Name { get; set; }
         public string Mobile { get; set; }

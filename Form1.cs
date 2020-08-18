@@ -15,6 +15,7 @@ namespace PAT
     {
         public static string connectionString = @"Data Source=.\PAT.db; Version=3; FailIfMissing=True; Foreign Keys=True;";
         private int rowIndex = 0;
+        private int PatientID = 0;
 
         public Form1()
         {
@@ -97,6 +98,19 @@ namespace PAT
             }
 
             dg_patients.DataSource = patients;
+            dg_patients.Columns[1].Width = 224;
+            dg_patients.Columns[2].Width = 224;
+            dg_patients.Columns[3].Width = 224;
+            dg_patients.Columns[4].Width = 169;
+
+            dg_patients.Columns[4].HeaderText = "No. of Days Refil";
+
+            dg_patients.Columns[0].Visible = false;
+            dg_patients.Columns[5].Visible = false;
+            dg_patients.Columns[6].Visible = false;
+            dg_patients.Columns[7].Visible = false;
+            dg_patients.Columns[8].Visible = false;
+            dg_patients.Columns[10].Visible = false;
 
 
         }
@@ -131,6 +145,7 @@ namespace PAT
                             while (reader.Read())
                             {
                                 Patient la = new Patient();
+                                la.ID = Int32.Parse(reader["ID"].ToString());
                                 la.MRN = reader["MRN"].ToString();
                                 la.Name = reader["Name"].ToString();
                                 la.Mobile = reader["Mobile"].ToString();
@@ -159,14 +174,16 @@ namespace PAT
         {
             if (e.Button == MouseButtons.Right)
             {
+
+                PatientID = Convert.ToInt32(this.dg_patients.Rows[e.RowIndex].Cells[0].Value);
                 this.dg_patients.Rows[e.RowIndex].Selected = true;
                 this.rowIndex = e.RowIndex;
                 this.dg_patients.CurrentCell = this.dg_patients.Rows[e.RowIndex].Cells[1];
                 this.contextMenuStrip1.Show(this.dg_patients, e.Location);
                 contextMenuStrip1.Show(Cursor.Position);
-                
 
-                
+
+
             }
 
         }
@@ -198,12 +215,54 @@ namespace PAT
         void contexMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ToolStripItem item = e.ClickedItem;
-            if(item.Text == "Update")
+            if (item.Text == "Update")
             {
-                AddPatientInfo addPatientInfo = new AddPatientInfo(1);
+                AddPatientInfo addPatientInfo = new AddPatientInfo(PatientID);
                 addPatientInfo.ShowDialog();
             }
-            
+            if (item.Text == "Delete")
+            {
+
+                DialogResult dialogResult = MessageBox.Show("Are you sure ?", "Alert", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    DeletePatient(PatientID);
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    //do something else
+                }
+
+                
+                
+            }
+
+        }
+
+        private void DeletePatient(int vPatientID)
+        {
+            int result = -1;
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(conn))
+                {
+                    cmd.CommandText = "delete from patients where id = " + vPatientID;
+                    cmd.Prepare();
+                    try
+                    {
+                        result = cmd.ExecuteNonQuery();
+                        MessageBox.Show("Deleted successfully", "Alert", MessageBoxButtons.OK);
+                        LoadPatients(); 
+                    }
+                    catch (SQLiteException e)
+                    {
+                        MessageBox.Show("Unable to delete " + e.Message, "Error", MessageBoxButtons.OK);
+                    }
+                }
+                conn.Close();
+            }
         }
 
     }

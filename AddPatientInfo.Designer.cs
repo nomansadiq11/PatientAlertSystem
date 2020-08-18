@@ -45,6 +45,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.txt_splcomments = new System.Windows.Forms.RichTextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.txt_patientid = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label2
@@ -204,11 +205,19 @@
             this.label8.TabIndex = 16;
             this.label8.Text = "Spl. Comments";
             // 
+            // txt_patientid
+            // 
+            this.txt_patientid.Location = new System.Drawing.Point(2, 369);
+            this.txt_patientid.Name = "txt_patientid";
+            this.txt_patientid.Size = new System.Drawing.Size(100, 20);
+            this.txt_patientid.TabIndex = 17;
+            // 
             // AddPatientInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 401);
+            this.Controls.Add(this.txt_patientid);
             this.Controls.Add(this.txt_splcomments);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txt_Medicine);
@@ -253,5 +262,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.RichTextBox txt_splcomments;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txt_patientid;
     }
 }
