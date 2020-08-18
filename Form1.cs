@@ -14,6 +14,7 @@ namespace PAT
     public partial class Form1 : Form
     {
         public static string connectionString = @"Data Source=.\PAT.db; Version=3; FailIfMissing=True; Foreign Keys=True;";
+        private int rowIndex = 0;
 
         public Form1()
         {
@@ -21,6 +22,7 @@ namespace PAT
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             LoadComboSearchCritera();
             LoadPatients();
+            contextMenuStrip1.ItemClicked += new ToolStripItemClickedEventHandler(contexMenu_ItemClicked);
         }
 
 
@@ -84,7 +86,7 @@ namespace PAT
             //dg_patients.Columns[2].Name = "Product Price";
 
 
-            List<Patient> patients = GetLanguages(0);
+            List<Patient> patients = GetPatientsLists(0);
             if (cb_search.SelectedIndex == 1)
             {
                 patients = patients.Where(a => a.ReminderDate2 == DateTime.Now).ToList();
@@ -109,7 +111,7 @@ namespace PAT
         }
 
 
-        public static List<Patient> GetLanguages(int langId)
+        public static List<Patient> GetPatientsLists(int langId)
         {
             List<Patient> langs = new List<Patient>();
             try
@@ -153,6 +155,56 @@ namespace PAT
             return langs;
         }
 
+        private void dg_patients_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                this.dg_patients.Rows[e.RowIndex].Selected = true;
+                this.rowIndex = e.RowIndex;
+                this.dg_patients.CurrentCell = this.dg_patients.Rows[e.RowIndex].Cells[1];
+                this.contextMenuStrip1.Show(this.dg_patients, e.Location);
+                contextMenuStrip1.Show(Cursor.Position);
+                
+
+                
+            }
+
+        }
+
+        private void contextMenuStrip1_Click(object sender, EventArgs e)
+        {
+
+
+            //var clickedMenuItem = sender as ContextMenuStrip;
+            //var menuText = clickedMenuItem.Text;
+
+            //switch (menuText)
+            //{
+            //    case "Update":
+            //        MessageBox.Show(menuText); 
+            //        break;
+            //    case "Delete":
+            //        break;
+
+            //}
+
+
+            //if (!this.dg_patients.Rows[this.rowIndex].IsNewRow)
+            //{
+            //    this.dg_patients.Rows.RemoveAt(this.rowIndex);
+            //}
+        }
+
+        void contexMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            ToolStripItem item = e.ClickedItem;
+            if(item.Text == "Update")
+            {
+                AddPatientInfo addPatientInfo = new AddPatientInfo(1);
+                addPatientInfo.ShowDialog();
+            }
+            
+        }
 
     }
 }

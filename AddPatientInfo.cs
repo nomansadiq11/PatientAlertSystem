@@ -22,6 +22,71 @@ namespace PAT
 
         }
 
+        public AddPatientInfo(int PatientID)
+        {
+            InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            Clears();
+
+            List<Patient> patients = GetPatientsLists(PatientID);
+
+            txt_MRN.Text = patients[0].MRN;
+            txt_name.Text = patients[0].Name;
+            txt_mobile.Text = patients[0].Mobile;
+            txt_NRD.Text = patients[0].NDR;
+            txt_NRDB.Text = patients[0].NDRB;
+            txt_Address.Text = patients[0].Address;
+            txt_Medicine.Text = patients[0].Medicine;
+            txt_splcomments.Text = patients[0].SplComments;
+
+
+
+        }
+
+        public static List<Patient> GetPatientsLists(int langId)
+        {
+            List<Patient> langs = new List<Patient>();
+            try
+            {
+                using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+                {
+                    conn.Open();
+                    string sql = "SELECT * FROM Patients WHERE Id = " + langId;
+                    if (langId == 0)
+                    {
+                        sql = "SELECT * FROM Patients";
+                    }
+                    using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                    {
+                        using (SQLiteDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Patient la = new Patient();
+                                la.MRN = reader["MRN"].ToString();
+                                la.Name = reader["Name"].ToString();
+                                la.Mobile = reader["Mobile"].ToString();
+                                la.NDR = reader["NDR"].ToString();
+                                la.NDRB = reader["NDRB"].ToString();
+                                la.Address = reader["Address"].ToString();
+                                la.Medicine = reader["Medicine"].ToString();
+                                la.SplComments = reader["SplComments"].ToString();
+                                la.ReminderDate = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString())).ToString("dd-MM-yyyy");
+                                la.ReminderDate2 = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString()));
+                                langs.Add(la);
+                            }
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+            catch (SQLiteException e)
+            {
+
+            }
+            return langs;
+        }
+
         public static int AddPatient(string MRN, string Name, string Mobile, int NDR, int NDRB, string Address, string Medicine, string SplComments, out string vError)
         {
             int result = -1;
