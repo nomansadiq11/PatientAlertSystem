@@ -175,15 +175,20 @@ namespace PAT
             if (e.Button == MouseButtons.Right)
             {
 
-                PatientID = Convert.ToInt32(this.dg_patients.Rows[e.RowIndex].Cells[0].Value);
-                this.dg_patients.Rows[e.RowIndex].Selected = true;
-                this.rowIndex = e.RowIndex;
-                this.dg_patients.CurrentCell = this.dg_patients.Rows[e.RowIndex].Cells[1];
-                this.contextMenuStrip1.Show(this.dg_patients, e.Location);
-                contextMenuStrip1.Show(Cursor.Position);
+                try
+                {
+                    PatientID = Convert.ToInt32(this.dg_patients.Rows[e.RowIndex].Cells[0].Value);
+                    this.dg_patients.Rows[e.RowIndex].Selected = true;
+                    this.rowIndex = e.RowIndex;
+                    this.dg_patients.CurrentCell = this.dg_patients.Rows[e.RowIndex].Cells[1];
+                    this.contextMenuStrip1.Show(this.dg_patients, e.Location);
+                    contextMenuStrip1.Show(Cursor.Position);
+                }
+                catch (Exception ex)
+                {
 
-
-
+                }
+                
             }
 
         }

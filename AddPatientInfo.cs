@@ -21,6 +21,7 @@ namespace PAT
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             Clears();
+            txt_patientid.Visible = false;
 
         }
 
@@ -29,6 +30,7 @@ namespace PAT
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             Clears();
+            txt_patientid.Visible = false;
 
             List<Patient> patients = GetPatientsLists(PatientID);
 
@@ -141,7 +143,11 @@ namespace PAT
         private void btn_Save_Click(object sender, EventArgs e)
         {
             string verror = "";
-            PatientID = Convert.ToInt32(txt_patientid.Text); 
+            if(txt_patientid.Text != "")
+            {
+                PatientID = Convert.ToInt32(txt_patientid.Text);
+            }
+            
             int val = AddPatient(PatientID, txt_MRN.Text.Trim(), txt_name.Text.Trim(), txt_mobile.Text.Trim(), Convert.ToInt32(txt_NRD.Text.Trim()), Convert.ToInt32(txt_NRDB.Text.Trim()), txt_Address.Text.Trim(), txt_Medicine.Text.Trim(), txt_splcomments.Text.Trim(), out verror);
             if (val == 1)
             {

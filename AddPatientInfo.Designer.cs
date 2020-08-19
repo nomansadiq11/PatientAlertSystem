@@ -238,7 +238,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AddPatientInfo";
-            this.Text = "AddPatientInfo";
+            this.Text = "Add Patient Information";
             this.ResumeLayout(false);
             this.PerformLayout();
 
