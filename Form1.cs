@@ -88,13 +88,21 @@ namespace PAT
 
 
             List<Patient> patients = GetPatientsLists(0);
+            if (cb_search.SelectedIndex == 0)
+            {
+                patients = patients.Where(a =>  a.ideleted == 0).ToList();
+            }
             if (cb_search.SelectedIndex == 1)
             {
-                patients = patients.Where(a => a.ReminderDate2 == DateTime.Now).ToList();
+                patients = patients.Where(a => a.ReminderDate2 == DateTime.Now && a.ideleted == 0).ToList();
             }
             if (cb_search.SelectedIndex == 2)
             {
-                patients = patients.Where(a => a.ReminderDate2 < DateTime.Now).ToList();
+                patients = patients.Where(a => a.ReminderDate2 < DateTime.Now && a.ideleted == 0).ToList();
+            }
+            if (cb_search.SelectedIndex == 3)
+            {
+                patients = patients.Where(a => a.ideleted == 1).ToList();
             }
 
             dg_patients.DataSource = patients;
@@ -110,7 +118,9 @@ namespace PAT
             dg_patients.Columns[6].Visible = false;
             dg_patients.Columns[7].Visible = false;
             dg_patients.Columns[8].Visible = false;
+            //dg_patients.Columns[9].Visible = false;
             dg_patients.Columns[10].Visible = false;
+            dg_patients.Columns[11].Visible = false;
 
 
         }
@@ -120,6 +130,7 @@ namespace PAT
             cb_search.Items.Insert(0, "All");
             cb_search.Items.Insert(1, "Due Today");
             cb_search.Items.Insert(2, "Overdue by Today");
+            cb_search.Items.Insert(3, "Deleted");
             cb_search.SelectedIndex = 0;
 
         }
@@ -154,6 +165,7 @@ namespace PAT
                                 la.Address = reader["Address"].ToString();
                                 la.Medicine = reader["Medicine"].ToString();
                                 la.SplComments = reader["SplComments"].ToString();
+                                la.ideleted = Int32.Parse(reader["idelete"].ToString());
                                 la.ReminderDate = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString())).ToString("dd-MM-yyyy");
                                 la.ReminderDate2 = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString()));
                                 langs.Add(la);
@@ -253,11 +265,12 @@ namespace PAT
                 conn.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(conn))
                 {
-                    cmd.CommandText = "delete from patients where id = " + vPatientID;
+                    cmd.CommandText = "update patients set idelete = 1 where id = " + vPatientID;
                     cmd.Prepare();
                     try
                     {
                         result = cmd.ExecuteNonQuery();
+                        AddPatientHistory("deleted patient"); 
                         MessageBox.Show("Deleted successfully", "Alert", MessageBoxButtons.OK);
                         LoadPatients(); 
                     }
@@ -268,6 +281,74 @@ namespace PAT
                 }
                 conn.Close();
             }
+        }
+
+
+        public static int GetSeqID(string tablename)
+        {
+            int seqID = 0;
+            DataTable dt = new DataTable();
+            SQLiteConnection conn = new SQLiteConnection(connectionString);
+
+            try
+            {
+
+                conn.Open();
+                string sql = "SELECT seq FROM sqlite_sequence WHERE Name = '" + tablename + "' ";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+
+                if (dt.Rows.Count > 0)
+                {
+                    seqID = Convert.ToInt32(dt.Rows[0]["seq"]);
+                }
+            }
+            catch (SQLiteException e)
+            {
+                seqID = 0;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return seqID;
+        }
+
+        private void AddPatientHistory(string Message)
+        {
+            int result = -1;
+
+            string sql = "INSERT INTO Patients_History(Message, PatientID, cdate) VALUES (@Message, @PatientID, Datetime('now'))";
+
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(conn))
+                {
+                    cmd.CommandText = sql;
+                    cmd.Prepare();
+
+                    cmd.Parameters.AddWithValue("@Message", Message);
+                    cmd.Parameters.AddWithValue("@PatientID", GetSeqID("Patients"));
+
+                    try
+                    {
+                        result = cmd.ExecuteNonQuery();
+                    }
+                    catch (SQLiteException e)
+                    {
+
+                    }
+                }
+                conn.Close();
+            }
+
+
         }
 
     }

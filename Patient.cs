@@ -17,8 +17,12 @@ namespace PAT
         public string Medicine { get; set; }
         public string SplComments { get; set; }
 
+        
+
         public string ReminderDate { get; set; }
 
         public DateTime ReminderDate2 { get; set; }
+
+        public int ideleted { get; set; }
     }
 }

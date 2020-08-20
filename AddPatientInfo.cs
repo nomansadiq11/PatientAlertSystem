@@ -43,8 +43,9 @@ namespace PAT
             txt_Address.Text = patients[0].Address;
             txt_Medicine.Text = patients[0].Medicine;
             txt_splcomments.Text = patients[0].SplComments;
+            txt_savemessage.Text = "";
 
-            
+
 
 
         }
@@ -94,11 +95,45 @@ namespace PAT
             return langs;
         }
 
-        public static int AddPatient(int vPatientID, string MRN, string Name, string Mobile, int NDR, int NDRB, string Address, string Medicine, string SplComments, out string vError)
+        public static int GetSeqID(string tablename)
+        {
+            int seqID = 0;
+            DataTable dt = new DataTable();
+            SQLiteConnection conn = new SQLiteConnection(connectionString);
+
+            try
+            {
+
+                conn.Open();
+                string sql = "SELECT seq FROM sqlite_sequence WHERE Name = '" + tablename + "' ";
+
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+
+                if (dt.Rows.Count > 0)
+                {
+                    seqID = Convert.ToInt32(dt.Rows[0]["seq"]);
+                }
+            }
+            catch (SQLiteException e)
+            {
+                seqID = 0;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return seqID;
+        }
+
+        public int AddPatient(int vPatientID, string MRN, string Name, string Mobile, int NDR, int NDRB, string Address, string Medicine, string SplComments, out string vError)
         {
             int result = -1;
             vError = "";
-            string sql = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'))";
+            string sql = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate, cdate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'), Datetime('now'))";
 
             if (vPatientID > 0)
             {
@@ -129,6 +164,8 @@ namespace PAT
                     try
                     {
                         result = cmd.ExecuteNonQuery();
+                        AddPatientHistory(txt_savemessage.Text.Trim());
+
                     }
                     catch (SQLiteException e)
                     {
@@ -140,14 +177,70 @@ namespace PAT
             return result;
         }
 
+        private void AddPatientHistory(string Message)
+        {
+            int result = -1;
+
+            string sql = "INSERT INTO Patients_History(Message, PatientID, cdate) VALUES (@Message, @PatientID, Datetime('now'))";
+
+            using (SQLiteConnection conn = new SQLiteConnection(connectionString))
+            {
+
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(conn))
+                {
+                    cmd.CommandText = sql;
+                    cmd.Prepare();
+
+                    cmd.Parameters.AddWithValue("@Message", Message);
+                    cmd.Parameters.AddWithValue("@PatientID", GetSeqID("Patients"));
+
+                    try
+                    {
+                        result = cmd.ExecuteNonQuery();
+                    }
+                    catch (SQLiteException e)
+                    {
+
+                    }
+                }
+                conn.Close();
+            }
+
+
+        }
+
         private void btn_Save_Click(object sender, EventArgs e)
         {
+
+            if (txt_MRN.Text.Trim() == "")
+            {
+                MessageBox.Show("Please enter MRN", "Alert", MessageBoxButtons.OK);
+                return;
+            }
+            if (txt_NRD.Text.Trim() == "" || txt_NRD.Text.Trim() == "0")
+            {
+                MessageBox.Show("Please enter No of days refilled", "Alert", MessageBoxButtons.OK);
+                return;
+            }
+            if (txt_NRDB.Text.Trim() == "" || txt_NRDB.Text.Trim() == "0")
+            {
+                MessageBox.Show("Please enter No of days before reminder?", "Alert", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (txt_savemessage.Text.Trim() == "")
+            {
+                MessageBox.Show("Please enter save message", "Alert", MessageBoxButtons.OK);
+                return;
+            }
+
             string verror = "";
-            if(txt_patientid.Text != "")
+            if (txt_patientid.Text != "")
             {
                 PatientID = Convert.ToInt32(txt_patientid.Text);
             }
-            
+
             int val = AddPatient(PatientID, txt_MRN.Text.Trim(), txt_name.Text.Trim(), txt_mobile.Text.Trim(), Convert.ToInt32(txt_NRD.Text.Trim()), Convert.ToInt32(txt_NRDB.Text.Trim()), txt_Address.Text.Trim(), txt_Medicine.Text.Trim(), txt_splcomments.Text.Trim(), out verror);
             if (val == 1)
             {
@@ -170,6 +263,34 @@ namespace PAT
             txt_Address.Text = "";
             txt_Medicine.Text = "";
             txt_splcomments.Text = "";
+        }
+
+        private void txt_NRD_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+
+            // only allow one decimal point
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txt_NRDB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+
+            // only allow one decimal point
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

@@ -46,6 +46,9 @@
             this.txt_splcomments = new System.Windows.Forms.RichTextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.txt_patientid = new System.Windows.Forms.TextBox();
+            this.txt_history = new System.Windows.Forms.Button();
+            this.txt_savemessage = new System.Windows.Forms.RichTextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -119,6 +122,7 @@
             this.txt_NRD.Name = "txt_NRD";
             this.txt_NRD.Size = new System.Drawing.Size(92, 20);
             this.txt_NRD.TabIndex = 4;
+            this.txt_NRD.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_NRD_KeyPress);
             // 
             // label4
             // 
@@ -137,6 +141,7 @@
             this.txt_NRDB.Name = "txt_NRDB";
             this.txt_NRDB.Size = new System.Drawing.Size(92, 20);
             this.txt_NRDB.TabIndex = 5;
+            this.txt_NRDB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_NRDB_KeyPress);
             // 
             // label5
             // 
@@ -207,16 +212,47 @@
             // 
             // txt_patientid
             // 
-            this.txt_patientid.Location = new System.Drawing.Point(2, 369);
+            this.txt_patientid.Location = new System.Drawing.Point(12, 255);
             this.txt_patientid.Name = "txt_patientid";
-            this.txt_patientid.Size = new System.Drawing.Size(100, 20);
+            this.txt_patientid.Size = new System.Drawing.Size(33, 20);
             this.txt_patientid.TabIndex = 17;
+            // 
+            // txt_history
+            // 
+            this.txt_history.Location = new System.Drawing.Point(454, 339);
+            this.txt_history.Name = "txt_history";
+            this.txt_history.Size = new System.Drawing.Size(140, 50);
+            this.txt_history.TabIndex = 18;
+            this.txt_history.Text = "View History";
+            this.txt_history.UseVisualStyleBackColor = true;
+            // 
+            // txt_savemessage
+            // 
+            this.txt_savemessage.Location = new System.Drawing.Point(144, 339);
+            this.txt_savemessage.MaxLength = 500;
+            this.txt_savemessage.Name = "txt_savemessage";
+            this.txt_savemessage.Size = new System.Drawing.Size(304, 53);
+            this.txt_savemessage.TabIndex = 19;
+            this.txt_savemessage.Text = "Initial added";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(7, 353);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(99, 22);
+            this.label9.TabIndex = 20;
+            this.label9.Text = "Saving Info";
             // 
             // AddPatientInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 401);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.txt_savemessage);
+            this.Controls.Add(this.txt_history);
             this.Controls.Add(this.txt_patientid);
             this.Controls.Add(this.txt_splcomments);
             this.Controls.Add(this.label8);
@@ -263,5 +299,8 @@
         private System.Windows.Forms.RichTextBox txt_splcomments;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txt_patientid;
+        private System.Windows.Forms.Button txt_history;
+        private System.Windows.Forms.RichTextBox txt_savemessage;
+        private System.Windows.Forms.Label label9;
     }
 }
