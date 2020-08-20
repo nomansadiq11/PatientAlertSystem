@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace PAT
 {
@@ -17,12 +18,19 @@ namespace PAT
         public string Medicine { get; set; }
         public string SplComments { get; set; }
 
-        
+
 
         public string ReminderDate { get; set; }
 
         public DateTime ReminderDate2 { get; set; }
 
         public int ideleted { get; set; }
+    }
+
+    public class Patients_History
+    {
+        public string Message { get; set; }
+        public string UpdatedOn { get; set; }
+        
     }
 }

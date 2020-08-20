@@ -225,6 +225,7 @@
             this.txt_history.TabIndex = 18;
             this.txt_history.Text = "View History";
             this.txt_history.UseVisualStyleBackColor = true;
+            this.txt_history.Click += new System.EventHandler(this.txt_history_Click);
             // 
             // txt_savemessage
             // 

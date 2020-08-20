@@ -164,7 +164,10 @@ namespace PAT
                     try
                     {
                         result = cmd.ExecuteNonQuery();
-                        AddPatientHistory(txt_savemessage.Text.Trim());
+                        AddPatientHistory(txt_savemessage.Text.Trim(), vPatientID);
+
+
+
 
                     }
                     catch (SQLiteException e)
@@ -177,9 +180,14 @@ namespace PAT
             return result;
         }
 
-        private void AddPatientHistory(string Message)
+        private void AddPatientHistory(string Message, int vPatientID)
         {
             int result = -1;
+
+            if (vPatientID == 0)
+            {
+                vPatientID = GetSeqID("Patients");
+            }
 
             string sql = "INSERT INTO Patients_History(Message, PatientID, cdate) VALUES (@Message, @PatientID, Datetime('now'))";
 
@@ -193,7 +201,7 @@ namespace PAT
                     cmd.Prepare();
 
                     cmd.Parameters.AddWithValue("@Message", Message);
-                    cmd.Parameters.AddWithValue("@PatientID", GetSeqID("Patients"));
+                    cmd.Parameters.AddWithValue("@PatientID", vPatientID);
 
                     try
                     {
@@ -291,6 +299,17 @@ namespace PAT
             {
                 e.Handled = true;
             }
+        }
+
+        private void txt_history_Click(object sender, EventArgs e)
+        {
+            if (txt_patientid.Text != "")
+            {
+                PatientID = Convert.ToInt32(txt_patientid.Text);
+            }
+
+            PatientsHistory patientsHistory = new PatientsHistory(PatientID);
+            patientsHistory.ShowDialog();
         }
     }
 }

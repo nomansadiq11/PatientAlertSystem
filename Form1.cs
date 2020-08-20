@@ -270,7 +270,7 @@ namespace PAT
                     try
                     {
                         result = cmd.ExecuteNonQuery();
-                        AddPatientHistory("deleted patient"); 
+                        AddPatientHistory("deleted patient", vPatientID); 
                         MessageBox.Show("Deleted successfully", "Alert", MessageBoxButtons.OK);
                         LoadPatients(); 
                     }
@@ -318,7 +318,7 @@ namespace PAT
             return seqID;
         }
 
-        private void AddPatientHistory(string Message)
+        private void AddPatientHistory(string Message, int vPatentID)
         {
             int result = -1;
 
@@ -334,7 +334,7 @@ namespace PAT
                     cmd.Prepare();
 
                     cmd.Parameters.AddWithValue("@Message", Message);
-                    cmd.Parameters.AddWithValue("@PatientID", GetSeqID("Patients"));
+                    cmd.Parameters.AddWithValue("@PatientID", vPatentID);
 
                     try
                     {
