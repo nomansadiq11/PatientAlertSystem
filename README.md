@@ -8,6 +8,16 @@ This repo created for specfic requirements for having a small tool using lite we
 - SQLite (DB)
 
 
-# Screen 1
+### Screen 1
 
 ![Image of Yaktocat](https://github.com/nomansadiq11/PatientAlertSystem/blob/master/Screen1.PNG)
+
+
+### Screen 2
+
+![Image of Yaktocat](https://github.com/nomansadiq11/PatientAlertSystem/blob/master/Screen2.PNG)
+
+
+### Screen 3
+
+![Image of Yaktocat](https://github.com/nomansadiq11/PatientAlertSystem/blob/master/Screen3.PNG)
