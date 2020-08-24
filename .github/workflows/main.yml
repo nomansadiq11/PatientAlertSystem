@@ -24,7 +24,10 @@ jobs:
     
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
-
+      
+    - name: restore Packages
+      uses: msbuild PAT.csproj -restore:True
+      
     - name: MSBuild
       run: msbuild PAT.csproj
 
