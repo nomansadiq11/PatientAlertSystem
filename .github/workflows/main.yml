@@ -28,8 +28,9 @@ jobs:
     # - name: Setup Nuget.exe
     #   uses: warrenbuckley/Setup-Nuget@v1
 
-    - name: Restore Packages
-      run: msbuild PAT.csproj -restore:True
+
+    - name: Restore Packages for whole solution
+      run: nuget restore PAT.sln
       
     - name: MSBuild
       run: msbuild PAT.csproj
