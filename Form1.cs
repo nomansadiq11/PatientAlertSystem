@@ -90,7 +90,7 @@ namespace PAT
             List<Patient> patients = GetPatientsLists(0);
             if (cb_search.SelectedIndex == 0)
             {
-                patients = patients.Where(a =>  a.ideleted == 0).ToList();
+                patients = patients.Where(a => a.ideleted == 0).ToList();
             }
             if (cb_search.SelectedIndex == 1)
             {
@@ -200,7 +200,7 @@ namespace PAT
                 {
 
                 }
-                
+
             }
 
         }
@@ -250,9 +250,15 @@ namespace PAT
                     //do something else
                 }
 
-                
-                
+
+
             }
+            if (item.Text == "History")
+            {
+                PatientsHistory patientsHistory = new PatientsHistory(PatientID);
+                patientsHistory.ShowDialog();
+            }
+
 
         }
 
@@ -270,9 +276,9 @@ namespace PAT
                     try
                     {
                         result = cmd.ExecuteNonQuery();
-                        AddPatientHistory("deleted patient", vPatientID); 
+                        AddPatientHistory("deleted patient", vPatientID);
                         MessageBox.Show("Deleted successfully", "Alert", MessageBoxButtons.OK);
-                        LoadPatients(); 
+                        LoadPatients();
                     }
                     catch (SQLiteException e)
                     {
