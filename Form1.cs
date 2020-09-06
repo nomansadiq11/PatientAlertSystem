@@ -88,6 +88,12 @@ namespace PAT
 
 
             List<Patient> patients = GetPatientsLists(0);
+
+            if(txt_MRN.Text.Trim() != "")
+            {
+                patients = patients.Where(a => a.ideleted == 0 && a.MRN == txt_MRN.Text.Trim()).ToList();
+            }
+
             if (cb_search.SelectedIndex == 0)
             {
                 patients = patients.Where(a => a.ideleted == 0).ToList();
