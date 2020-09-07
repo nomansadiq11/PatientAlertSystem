@@ -86,10 +86,20 @@ namespace PAT
             //dg_patients.Columns[1].Name = "Product Name";
             //dg_patients.Columns[2].Name = "Product Price";
 
+            List<Patient> patients = new List<Patient>(); 
 
-            List<Patient> patients = GetPatientsLists(0);
+            if (cb_search.SelectedIndex == 3)
+            {
+                patients = GetPatientsLists(0, 1);
+            }
+            else
+            {
+                patients = GetPatientsLists(0, 0);
+            }
 
-            if(txt_MRN.Text.Trim() != "")
+            
+
+            if (txt_MRN.Text.Trim() != "")
             {
                 patients = patients.Where(a => a.ideleted == 0 && a.MRN == txt_MRN.Text.Trim()).ToList();
             }
@@ -142,7 +152,7 @@ namespace PAT
         }
 
 
-        public static List<Patient> GetPatientsLists(int langId)
+        public static List<Patient> GetPatientsLists(int langId, int iDeleted)
         {
             List<Patient> langs = new List<Patient>();
             try
@@ -153,7 +163,7 @@ namespace PAT
                     string sql = "SELECT * FROM Patients WHERE Id = " + langId;
                     if (langId == 0)
                     {
-                        sql = "SELECT * FROM Patients";
+                        sql = "SELECT * FROM Patients where idelete = " + iDeleted;
                     }
                     using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                     {
