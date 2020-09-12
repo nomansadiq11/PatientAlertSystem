@@ -49,6 +49,7 @@
             this.txt_history = new System.Windows.Forms.Button();
             this.txt_savemessage = new System.Windows.Forms.RichTextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // label2
@@ -246,11 +247,19 @@
             this.label9.TabIndex = 20;
             this.label9.Text = "Saving Info";
             // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(536, 59);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(204, 20);
+            this.dateTimePicker1.TabIndex = 21;
+            // 
             // AddPatientInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 401);
+            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txt_savemessage);
             this.Controls.Add(this.txt_history);
@@ -303,5 +312,6 @@
         private System.Windows.Forms.Button txt_history;
         private System.Windows.Forms.RichTextBox txt_savemessage;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }
