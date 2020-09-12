@@ -182,8 +182,9 @@ namespace PAT
                                 la.Medicine = reader["Medicine"].ToString();
                                 la.SplComments = reader["SplComments"].ToString();
                                 la.ideleted = Int32.Parse(reader["idelete"].ToString());
-                                la.ReminderDate = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString())).ToString("dd-MM-yyyy");
-                                la.ReminderDate2 = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString()));
+                                //la.ReminderDate = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString())).ToString("dd-MM-yyyy");
+                                la.ReminderDate = reader["StartDate"].ToString() != "" ? DateTime.Parse(reader["StartDate"].ToString()).AddDays(Int32.Parse(la.NDR)).AddDays(-Int32.Parse(la.NDRB)).ToString("dd-MM-yyyy") : ""; 
+                                la.ReminderDate2 = reader["StartDate"].ToString() != "" ? DateTime.Parse(reader["StartDate"].ToString()).AddDays(Int32.Parse(la.NDR)).AddDays(-Int32.Parse(la.NDRB)) : DateTime.Now;
                                 langs.Add(la);
                             }
                         }
@@ -373,5 +374,9 @@ namespace PAT
 
         }
 
+        private void historyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
