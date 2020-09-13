@@ -86,8 +86,24 @@ namespace PAT
             //dg_patients.Columns[1].Name = "Product Name";
             //dg_patients.Columns[2].Name = "Product Price";
 
+            List<Patient> patients = new List<Patient>(); 
 
-            List<Patient> patients = GetPatientsLists(0);
+            if (cb_search.SelectedIndex == 3)
+            {
+                patients = GetPatientsLists(0, 1);
+            }
+            else
+            {
+                patients = GetPatientsLists(0, 0);
+            }
+
+            
+
+            if (txt_MRN.Text.Trim() != "")
+            {
+                patients = patients.Where(a => a.ideleted == 0 && a.MRN == txt_MRN.Text.Trim()).ToList();
+            }
+
             if (cb_search.SelectedIndex == 0)
             {
                 patients = patients.Where(a => a.ideleted == 0).ToList();
@@ -136,7 +152,7 @@ namespace PAT
         }
 
 
-        public static List<Patient> GetPatientsLists(int langId)
+        public static List<Patient> GetPatientsLists(int langId, int iDeleted)
         {
             List<Patient> langs = new List<Patient>();
             try
@@ -147,7 +163,7 @@ namespace PAT
                     string sql = "SELECT * FROM Patients WHERE Id = " + langId;
                     if (langId == 0)
                     {
-                        sql = "SELECT * FROM Patients";
+                        sql = "SELECT * FROM Patients where idelete = " + iDeleted;
                     }
                     using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                     {
@@ -166,8 +182,9 @@ namespace PAT
                                 la.Medicine = reader["Medicine"].ToString();
                                 la.SplComments = reader["SplComments"].ToString();
                                 la.ideleted = Int32.Parse(reader["idelete"].ToString());
-                                la.ReminderDate = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString())).ToString("dd-MM-yyyy");
-                                la.ReminderDate2 = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString()));
+                                //la.ReminderDate = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString())).ToString("dd-MM-yyyy");
+                                la.ReminderDate = reader["StartDate"].ToString() != "" ? DateTime.Parse(reader["StartDate"].ToString()).AddDays(Int32.Parse(la.NDR)).AddDays(-Int32.Parse(la.NDRB)).ToString("dd-MM-yyyy") : ""; 
+                                la.ReminderDate2 = reader["StartDate"].ToString() != "" ? DateTime.Parse(reader["StartDate"].ToString()).AddDays(Int32.Parse(la.NDR)).AddDays(-Int32.Parse(la.NDRB)) : DateTime.Now;
                                 langs.Add(la);
                             }
                         }
@@ -357,5 +374,9 @@ namespace PAT
 
         }
 
+        private void historyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

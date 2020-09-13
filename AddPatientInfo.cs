@@ -43,6 +43,7 @@ namespace PAT
             txt_Address.Text = patients[0].Address;
             txt_Medicine.Text = patients[0].Medicine;
             txt_splcomments.Text = patients[0].SplComments;
+            dtp_startdate.Value = patients[0].ReminderDate2;
             txt_savemessage.Text = "";
 
 
@@ -80,7 +81,7 @@ namespace PAT
                                 la.Medicine = reader["Medicine"].ToString();
                                 la.SplComments = reader["SplComments"].ToString();
                                 la.ReminderDate = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString())).ToString("dd-MM-yyyy");
-                                la.ReminderDate2 = DateTime.Now.AddDays(Int32.Parse(reader["NDR"].ToString())).AddDays(-Int32.Parse(reader["NDRB"].ToString()));
+                                la.ReminderDate2 = DateTime.Parse(reader["StartDate"].ToString());
                                 langs.Add(la);
                             }
                         }
@@ -133,11 +134,11 @@ namespace PAT
         {
             int result = -1;
             vError = "";
-            string sql = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate, cdate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'), Datetime('now'))";
+            string sql = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate, cdate, StartDate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'), Datetime('now'), @StartDate";
 
             if (vPatientID > 0)
             {
-                sql = "update Patients set MRN = @MRN, Name = @Name, Mobile = @Mobile, NDR = @NDR, NDRB  = @NDRB,Address = @Address, Medicine  = @Medicine , SplComments =  @SplComments, reminderDate = Date('now', '+" + NDR + " day') where ID = " + vPatientID;
+                sql = "update Patients set MRN = @MRN, Name = @Name, Mobile = @Mobile, NDR = @NDR, NDRB  = @NDRB,Address = @Address, Medicine  = @Medicine , SplComments =  @SplComments, reminderDate = Date('now', '+" + NDR + " day'), StartDate = @StartDate where ID = " + vPatientID;
             }
 
 
@@ -159,6 +160,8 @@ namespace PAT
                     cmd.Parameters.AddWithValue("@Address", Address);
                     cmd.Parameters.AddWithValue("@Medicine", Medicine);
                     cmd.Parameters.AddWithValue("@SplComments", SplComments);
+                    cmd.Parameters.AddWithValue("@StartDate", dtp_startdate.Value);
+                    
                     //cmd.Parameters.AddWithValue("@reminderDate", "Date(now, '+"+ NDR +" day')");
 
                     try

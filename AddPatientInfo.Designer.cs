@@ -49,6 +49,8 @@
             this.txt_history = new System.Windows.Forms.Button();
             this.txt_savemessage = new System.Windows.Forms.RichTextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.dtp_startdate = new System.Windows.Forms.DateTimePicker();
+            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -246,11 +248,31 @@
             this.label9.TabIndex = 20;
             this.label9.Text = "Saving Info";
             // 
+            // dtp_startdate
+            // 
+            this.dtp_startdate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtp_startdate.Location = new System.Drawing.Point(648, 62);
+            this.dtp_startdate.Name = "dtp_startdate";
+            this.dtp_startdate.Size = new System.Drawing.Size(92, 20);
+            this.dtp_startdate.TabIndex = 21;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(496, 60);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(146, 22);
+            this.label10.TabIndex = 22;
+            this.label10.Text = "Select Start Date";
+            // 
             // AddPatientInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 401);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.dtp_startdate);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.txt_savemessage);
             this.Controls.Add(this.txt_history);
@@ -303,5 +325,7 @@
         private System.Windows.Forms.Button txt_history;
         private System.Windows.Forms.RichTextBox txt_savemessage;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DateTimePicker dtp_startdate;
+        private System.Windows.Forms.Label label10;
     }
 }
