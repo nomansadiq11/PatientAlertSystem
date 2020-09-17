@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
@@ -13,7 +14,10 @@ namespace PAT
 {
     public partial class Form1 : Form
     {
-        public static string connectionString = @"Data Source=.\PAT.db; Version=3; FailIfMissing=True; Foreign Keys=True;";
+        //public static string connectionString = @"Data Source=.\PAT.db; Version=3; FailIfMissing=True; Foreign Keys=True;";
+
+        public static string connectionString = ConfigurationManager.ConnectionStrings["sqlitedb"].ConnectionString;
+
         private int rowIndex = 0;
         private int PatientID = 0;
 
