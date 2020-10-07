@@ -135,7 +135,7 @@ namespace PAT
         {
             int result = -1;
             vError = "";
-            string sql = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate, cdate, StartDate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'), Datetime('now'), @StartDate";
+            string sql = "INSERT INTO Patients(MRN, Name, Mobile,NDR,NDRB,Address,Medicine,SplComments, reminderDate, cdate, StartDate) VALUES (@MRN, @Name, @Mobile, @NDR, @NDRB, @Address, @Medicine, @SplComments, Date('now', '+" + NDR + " day'), Datetime('now'), @StartDate)";
 
             if (vPatientID > 0)
             {
