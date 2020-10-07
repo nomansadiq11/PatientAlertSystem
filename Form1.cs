@@ -90,40 +90,54 @@ namespace PAT
             //dg_patients.Columns[1].Name = "Product Name";
             //dg_patients.Columns[2].Name = "Product Price";
 
-            List<Patient> patients = new List<Patient>(); 
+            List<Patient> patients = new List<Patient>();
+            string where = ""; 
+            if (txt_MRN.Text.Trim() != "")
+            {
+                where += " and MRN = '"+ txt_MRN.Text.Trim() +"'";
+            }
+
+            if (txt_name.Text.Trim() != "")
+            {
+                where += " and Name like '%" + txt_name.Text.Trim() + "%'";
+            }
+
+
+            where += " and StartDate >=  '" + dp_refilldate.Value.Date.ToString("yyyy-MM-dd") + "'";
+
 
             if (cb_search.SelectedIndex == 3)
             {
-                patients = GetPatientsLists(0, 1);
+                patients = GetPatientsLists(0, 1, where);
             }
             else
             {
-                patients = GetPatientsLists(0, 0);
+                patients = GetPatientsLists(0, 0, where);
             }
 
             
 
-            if (txt_MRN.Text.Trim() != "")
-            {
-                patients = patients.Where(a => a.ideleted == 0 && a.MRN == txt_MRN.Text.Trim()).ToList();
-            }
+            //if (txt_MRN.Text.Trim() != "")
+            //{
+            //    patients = patients.Where(a => a.ideleted == 0 && a.MRN == txt_MRN.Text.Trim()).ToList();
+            //}
 
-            if (cb_search.SelectedIndex == 0)
-            {
-                patients = patients.Where(a => a.ideleted == 0).ToList();
-            }
-            if (cb_search.SelectedIndex == 1)
-            {
-                patients = patients.Where(a => a.ReminderDate2 == DateTime.Now && a.ideleted == 0).ToList();
-            }
-            if (cb_search.SelectedIndex == 2)
-            {
-                patients = patients.Where(a => a.ReminderDate2 < DateTime.Now && a.ideleted == 0).ToList();
-            }
-            if (cb_search.SelectedIndex == 3)
-            {
-                patients = patients.Where(a => a.ideleted == 1).ToList();
-            }
+            //if (cb_search.SelectedIndex == 0)
+            //{
+            //    patients = patients.Where(a => a.ideleted == 0).ToList();
+            //}
+            //if (cb_search.SelectedIndex == 1)
+            //{
+            //    patients = patients.Where(a => a.ReminderDate2 == DateTime.Now && a.ideleted == 0).ToList();
+            //}
+            //if (cb_search.SelectedIndex == 2)
+            //{
+            //    patients = patients.Where(a => a.ReminderDate2 < DateTime.Now && a.ideleted == 0).ToList();
+            //}
+            //if (cb_search.SelectedIndex == 3)
+            //{
+            //    patients = patients.Where(a => a.ideleted == 1).ToList();
+            //}
 
             dg_patients.DataSource = patients;
             dg_patients.Columns[1].Width = 224;
@@ -156,7 +170,7 @@ namespace PAT
         }
 
 
-        public static List<Patient> GetPatientsLists(int langId, int iDeleted)
+        public static List<Patient> GetPatientsLists(int langId, int iDeleted, string where)
         {
             List<Patient> langs = new List<Patient>();
             try
@@ -167,7 +181,7 @@ namespace PAT
                     string sql = "SELECT * FROM Patients WHERE Id = " + langId;
                     if (langId == 0)
                     {
-                        sql = "SELECT * FROM Patients where idelete = " + iDeleted;
+                        sql = "SELECT * FROM Patients where 1 = 1 and  idelete = " + iDeleted + where;
                     }
                     using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                     {
