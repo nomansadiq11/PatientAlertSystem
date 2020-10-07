@@ -106,7 +106,7 @@ namespace PAT
             where += " and StartDate >=  '" + dp_refilldate.Value.Date.ToString("yyyy-MM-dd") + "'";
 
 
-            if (cb_search.SelectedIndex == 3)
+            if (cb_search.SelectedIndex == 1)
             {
                 patients = GetPatientsLists(0, 1, where);
             }
@@ -162,9 +162,9 @@ namespace PAT
         private void LoadComboSearchCritera()
         {
             cb_search.Items.Insert(0, "All");
-            cb_search.Items.Insert(1, "Due Today");
-            cb_search.Items.Insert(2, "Overdue by Today");
-            cb_search.Items.Insert(3, "Deleted");
+            //cb_search.Items.Insert(1, "Due Today");
+            //cb_search.Items.Insert(2, "Overdue by Today");
+            cb_search.Items.Insert(1, "Deleted");
             cb_search.SelectedIndex = 0;
 
         }
